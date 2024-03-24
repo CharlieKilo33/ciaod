@@ -9,7 +9,7 @@ int main() {
 
 //  FunctionsDefault file_reader(file_path);
 //  file_reader.CreateNewFile();
-  FunctionsBin file_reader(file_path);
+  BinaryFile file_reader(file_path);
   file_reader.ConvertTextToBinary();
   file_reader.PrintAllRecords();
   file_reader.AccessRecordByNumber(5327);

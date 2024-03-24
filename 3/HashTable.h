@@ -1,30 +1,41 @@
-#include "FunctionsBin.h"
+#pragma once
 #include <iostream>
 #include <string>
+#include <iomanip>
+#include <utility>
 #include <memory>
+#include <vector>
+using namespace std;
 
-class HashTable {
- private:
-  struct Node {
-    int key;
-    CityInfo city_info;
-    std::unique_ptr<Node> next;
+struct Node {
+  string key;
+  int position;
+  bool is_deleted;
+  unique_ptr<Node> next;
 
-    Node(int k, const CityInfo& info) : key(k), city_info(info), next(nullptr) {}
-  };
-
-  static const int TABLE_SIZE = 10;
-  std::unique_ptr<Node> table[TABLE_SIZE];
-  FunctionsBin bin_functions;
-
-  static int HashFunction(int key);
-
- public:
-  explicit HashTable(FunctionsBin bin_functions);
-  ~HashTable();
-
-  void Insert(int key, const CityInfo& city_info);
-  void Delete(int key);
-  void Search(int key);
-  void LoadDataFromBinaryFile(const std::string& file_name);
+  Node() : position(-1), is_deleted(false), next(nullptr) {};
+  Node(string _key, int _position) : key(std::move(_key)), position(_position), is_deleted(false), next(nullptr) {};
 };
+
+struct HashTable {
+  size_t size;
+  size_t filled;
+  std::vector<unique_ptr<Node>> records;
+
+  explicit HashTable(size_t _size = 10) : size(_size), filled(0) {
+    records.reserve(size);
+    for (size_t i = 0; i < size; ++i) {
+      records.push_back(nullptr);
+    }
+  }
+  ~HashTable();
+};
+
+size_t hash_key(const string& key, size_t size);
+bool insert_key(HashTable &table, const string& key, int position);
+Node* find_key(HashTable &table, const string& key);
+int get_index(HashTable &table, const string& key);
+int delete_key(HashTable &table, const string& key);
+void rehash(HashTable &table);
+void printHashTable(const HashTable &table);
+int testHashT();

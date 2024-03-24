@@ -1,6 +1,6 @@
 #include "FunctionsBin.h"
 
-bool FunctionsBin::FileIsOpen(std::fstream &f) {
+bool BinaryFile::FileIsOpen(std::fstream &f) {
   if (f.is_open()) {
     return true;
   } else {
@@ -9,7 +9,7 @@ bool FunctionsBin::FileIsOpen(std::fstream &f) {
   }
 }
 
-void FunctionsBin::ConvertTextToBinary() {
+void BinaryFile::ConvertTextToBinary() {
   std::fstream text_file_fin(file_name_.replace_extension(".txt"), std::ios::in);
   if (!FileIsOpen(text_file_fin)) {
     return;
@@ -29,7 +29,7 @@ void FunctionsBin::ConvertTextToBinary() {
   binary_file_fout.close();
 }
 
-void FunctionsBin::SaveBinaryToText() {
+void BinaryFile::SaveBinaryToText() {
   std::fstream binary_file_fin(file_name_.replace_extension(".bin"), std::ios::binary | std::ios::in);
   if (!FileIsOpen(binary_file_fin)) {
     return;
@@ -49,7 +49,7 @@ void FunctionsBin::SaveBinaryToText() {
   text_file_fout.close();
 }
 
-void FunctionsBin::PrintAllRecords() {
+void BinaryFile::PrintAllRecords() {
   std::fstream binary_file_fin(file_name_.replace_extension(".bin"), std::ios::binary | std::ios::in);
 
   if (!FileIsOpen(binary_file_fin)) {
@@ -65,7 +65,7 @@ void FunctionsBin::PrintAllRecords() {
   binary_file_fin.close();
 }
 
-void FunctionsBin::AccessRecordByNumber(int record_number) {
+void BinaryFile::AccessRecordByNumber(int record_number) {
   std::fstream binary_file_fin(file_name_.replace_extension(".bin"), std::ios::binary | std::ios::in);
 
   if (!FileIsOpen(binary_file_fin)) {
@@ -91,7 +91,7 @@ void FunctionsBin::AccessRecordByNumber(int record_number) {
   binary_file_fin.close();
 }
 
-void FunctionsBin::DeleteRecordByKey(int key_value) {
+void BinaryFile::DeleteRecordByKey(int key_value) {
   std::fstream binary_file_fin(file_name_, std::ios::binary | std::ios::in | std::ios::out);
   if (!FileIsOpen(binary_file_fin)) {
     return;
@@ -152,7 +152,7 @@ void FunctionsBin::DeleteRecordByKey(int key_value) {
   binary_file_fin.close();
 }
 
-void FunctionsBin::CreateCountryCodeTable(const std::string &country_name) {
+void BinaryFile::CreateCountryCodeTable(const std::string &country_name) {
   std::fstream binary_file_fin(file_name_, std::ios::binary | std::ios::in);
   if (!FileIsOpen(binary_file_fin)) {
     return;
@@ -175,7 +175,7 @@ void FunctionsBin::CreateCountryCodeTable(const std::string &country_name) {
   country_table_fout.close();
 }
 
-void FunctionsBin::UpdateCityCodeByName(const std::string &city_name, int new_code) {
+void BinaryFile::UpdateCityCodeByName(const std::string &city_name, int new_code) {
   std::fstream binary_file(file_name_, std::ios::in | std::ios::out | std::ios::binary);
   if (!FileIsOpen(binary_file)) {
     return;

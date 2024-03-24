@@ -1,48 +1,49 @@
 #include <iostream>
 #include "HashTable.h"
-#include "FunctionsBin.h"
 
-void runSimpleTests() {
-  // Тест 1: Проверка вставки и поиска элемента в хеш-таблице
-  HashTable hashTable(FunctionsBin(__cxx11::path()));
-  hashTable.insert(1, 0);
-  hashTable.insert(101, 1);
+//void test_insert_and_find() {
+//  HashTable table;
+//  insert_key(table, "key1", 10);
+//  insert_key(table, "key2", 20);
+//
+//  if (find_key(table, "key1")->position == 10)
+//    std::cout << "Test Insert and Find 1 Passed" << std::endl;
+//  else
+//    std::cout << "Test Insert and Find 1 Failed" << std::endl;
+//
+//  if (find_key(table, "key2")->position == 20)
+//    std::cout << "Test Insert and Find 2 Passed" << std::endl;
+//  else
+//    std::cout << "Test Insert and Find 2 Failed" << std::endl;
+//}
+//
+//void test_delete() {
+//  HashTable table;
+//  insert_key(table, "key1", 10);
+//  insert_key(table, "key2", 20);
+//
+//  delete_key(table, "key1");
+//
+//  if (find_key(table, "key1") == nullptr)
+//    std::cout << "Test Delete Passed" << std::endl;
+//  else
+//    std::cout << "Test Delete Failed" << std::endl;
+//}
 
-  if (hashTable.find(1) == 0 && hashTable.find(101) == 1) {
-    std::cout << "Test 1 Passed: Insertion and search functionality works correctly." << std::endl;
-  } else {
-    std::cout << "Test 1 Failed: Insertion and search functionality does not work correctly." << std::endl;
+void test_rehash() {
+  HashTable table;
+  // Insert enough keys to trigger rehash
+  for (int i = 0; i < 1000; ++i) {
+    insert_key(table,"key" + std::to_string(i), i);
   }
 
-  // Тест 2: Проверка удаления элемента из хеш-таблицы
-  hashTable.remove(1);
-
-  if (hashTable.find(1) == -1 && hashTable.find(101) == 1) {
-    std::cout << "Test 2 Passed: Removal functionality works correctly." << std::endl;
-  } else {
-    std::cout << "Test 2 Failed: Removal functionality does not work correctly." << std::endl;
-  }
-
-  // Тест 3: Проверка взаимодействия хеш-таблицы с бинарным файлом
-  // Загрузка данных из бинарного файла в хеш-таблицу
-  std::ifstream binary_file_in(R"(E:\clion\ciaod\3\3_1.bin)", std::ios::binary);
-  CityInfo city_info;
-  int recordNumber = 0;
-  while (binary_file_in.read(reinterpret_cast<char *>(&city_info), sizeof(CityInfo))) {
-    hashTable.insert(city_info.city_code, recordNumber);
-    recordNumber++;
-  }
-  binary_file_in.close();
-
-  if (hashTable.find(1) == 0 && hashTable.find(101) == 1) {
-    std::cout << "Test 3 Passed: Binary file interaction works correctly." << std::endl;
-  } else {
-    std::cout << "Test 3 Failed: Binary file interaction does not work correctly." << std::endl;
-  }
+  printHashTable(table);
 }
 
 int main() {
-  runSimpleTests();
+//  test_insert_and_find();
+//  test_delete();
+  test_rehash();
 
   return 0;
 }

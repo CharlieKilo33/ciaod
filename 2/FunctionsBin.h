@@ -27,9 +27,9 @@ struct CityInfo {
   }
 };
 
-class FunctionsBin {
+class BinaryFile {
  public:
-  explicit FunctionsBin(fs::path file_name) : file_name_(std::move(file_name)) {};
+  explicit BinaryFile(fs::path file_name) : file_name_(std::move(file_name)) {};
   static bool FileIsOpen(std::fstream &f);
   void ConvertTextToBinary();
   void SaveBinaryToText();

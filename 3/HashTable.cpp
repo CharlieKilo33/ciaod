@@ -1,80 +1,115 @@
 #include "HashTable.h"
+#include <functional>
 
-#include <utility>
+size_t hash_key(const string& key, size_t size) {
+  hash<string> hash_fn;
+  return hash_fn(key) % size;
+}
 
+bool insert_key(HashTable &table, const string& key, int position) {
+  size_t index = hash_key(key, table.size);
+  unique_ptr<Node> new_node = make_unique<Node>(key, position);
 
-HashTable::HashTable(FunctionsBin bin_functions) : bin_functions(std::move(bin_functions)) {
-  for (auto & i : table) {
-    i = nullptr;
+  if (!table.records[index]) {
+    table.records[index] = std::move(new_node);
+  } else {
+    Node* current = table.records[index].get();
+    while (current->next) {
+      current = current->next.get();
+    }
+    current->next = std::move(new_node);
   }
+
+  table.filled++;
+  return true;
 }
 
-HashTable::~HashTable() {
-  for (auto & i : table) {
-    i = nullptr;
-  }
-}
+Node* find_key(HashTable &table, const string& key) {
+  size_t index = hash_key(key, table.size);
+  Node* current = table.records[index].get();
 
-int HashTable::HashFunction(int key) {
-  return key % TABLE_SIZE;
-}
-
-void HashTable::Insert(int key, const CityInfo& city_info) {
-  int index = HashFunction(key);
-  std::unique_ptr<Node> newNode = std::make_unique<Node>(key, city_info);
-  newNode->next = std::move(table[index]);
-  table[index] = std::move(newNode);
-}
-
-void HashTable::Delete(int key) {
-  int index = HashFunction(key);
-  Node* current = table[index].get();
-  std::unique_ptr<Node> prev = nullptr;
-
-  while (current != nullptr) {
+  while (current) {
     if (current->key == key) {
-      if (prev != nullptr) {
-        prev->next = std::move(current->next); // Обновляем указатель предыдущего узла
+      return current;
+    }
+    current = current->next.get();
+  }
+
+  return nullptr;
+}
+
+int get_index(HashTable &table, const string& key) {
+  size_t index = hash_key(key, table.size);
+  Node* current = table.records[index].get();
+
+  while (current) {
+    if (current->key == key) {
+      return index;
+    }
+    current = current->next.get();
+  }
+
+  return -1;
+}
+
+int delete_key(HashTable &table, const string& key) {
+  size_t index = hash_key(key, table.size);
+  Node* current = table.records[index].get();
+  Node* prev = nullptr;
+
+  while (current) {
+    if (current->key == key) {
+      if (prev) {
+        prev->next = std::move(current->next);
       } else {
-        table[index] = std::move(current->next); // Удаляем первый узел в списке
+        table.records[index] = std::move(current->next);
       }
-      std::cout << "Key " << key << " deleted." << std::endl;
-      return;
+      table.filled--;
+      return index;
     }
-    prev = std::move(std::unique_ptr<Node>(current)); // Преобразуем указатель current в уникальный указатель
+    prev = current;
     current = current->next.get();
   }
 
-  std::cout << "Key not found for deletion." << std::endl;
+  return -1;
 }
 
-void HashTable::Search(int key) {
-  int index = HashFunction(key);
-  Node* current = table[index].get();
+void rehash(HashTable &table) {
+  size_t new_size = table.size * 2;
+  vector<unique_ptr<Node>> new_records(new_size);
 
-  while (current != nullptr) {
-    if (current->key == key) {
-      std::cout << "Key found - City Code: " << current->city_info.city_code << ", City Name: "
-                << current->city_info.city_name << ", Country: " << current->city_info.country << std::endl;
-      return;
+  for (size_t i = 0; i < table.size; ++i) {
+    Node* current = table.records[i].get();
+    while (current) {
+      size_t new_index = hash_key(current->key, new_size);
+
+      unique_ptr<Node> temp = std::move(current->next);
+      current->next = std::move(new_records[new_index]);
+      new_records[new_index] = std::move(table.records[i]);
+      table.records[i] = std::move(temp);
+
+      current = table.records[i].get();
     }
-    current = current->next.get();
   }
 
-  std::cout << "Key not found." << std::endl;
+  table.size = new_size;
+  table.records = std::move(new_records);
 }
 
-void HashTable::LoadDataFromBinaryFile(const std::string& file_name) {
-  std::fstream binary_file(file_name, std::ios::binary | std::ios::in);
-
-  if (!FunctionsBin::FileIsOpen(binary_file)) {
-    return;
+void printHashTable(const HashTable &table) {
+  for (size_t i = 0; i < table.size; ++i) {
+    cout << "Index " << i << ": ";
+    Node* current = table.records[i].get();
+    while (current) {
+      cout << "(" << current->key << ", " << current->position << ") ";
+      current = current->next.get();
+    }
+    cout << endl;
   }
-
-  CityInfo city_info;
-  while (binary_file.read(reinterpret_cast<char *>(&city_info), sizeof(CityInfo))) {
-    Insert(city_info.city_code, city_info);
-  }
-
-  binary_file.close();
 }
+
+int testHashT() {
+  // Implement testing logic here
+  return 0;
+}
+HashTable::~HashTable() = default;

@@ -27,9 +27,9 @@ struct CityInfo {
   }
 };
 
-class FunctionsBin {
+class BinaryFile {
  public:
-  explicit FunctionsBin(fs::path file_name) : file_name_(std::move(file_name)) {};
+  explicit BinaryFile(fs::path file_name) : file_name_(std::move(file_name)) {};
   static bool FileIsOpen(std::fstream &f);
   void ConvertTextToBinary();
   void SaveBinaryToText();
@@ -38,7 +38,8 @@ class FunctionsBin {
   void DeleteRecordByKey(int key_value);
   void CreateCountryCodeTable(const std::string &country_name);
   void UpdateCityCodeByName(const std::string &city_name, int new_code);
+  fs::path GetName();
 
  private:
-  fs::path file_name_;
+  fs::path file_name_ = fs::path("E:/clion/ciaod/3/3_1.bin");
 };
