@@ -158,7 +158,7 @@ void BinaryFile::CreateCountryCodeTable(const std::string &country_name) {
     return;
   }
 
-  fs::path file_path = fs::path("E:/clion/ciaod/2/") / fs::path(country_name + "_codes.txt");
+  fs::path file_path = fs::path("C:/Users/misha/CLionProjects/ciaod/2/") / fs::path(country_name + "_codes.txt");
   std::fstream country_table_fout(file_path, std::ios::out);
   if (!FileIsOpen(country_table_fout)) {
     return;

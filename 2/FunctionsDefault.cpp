@@ -115,7 +115,7 @@ void FunctionsDefault::CreateNewFile() {
   std::cout << "Enter the new file's name:\n";
   std::string temp;
   std::cin >> temp;
-  fs::path second_file_name = fs::path("E:/clion/ciaod/2/") / fs::path(temp + ".txt");
+  fs::path second_file_name = fs::path("C:/Users/misha/CLionProjects/ciaod/2/") / fs::path(temp + ".txt");
   fout.open(second_file_name, std::ios::out);
 
   if (!FileIsOpen(fout)) {

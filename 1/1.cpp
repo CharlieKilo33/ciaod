@@ -178,5 +178,5 @@ void bit_sort() {
 }
 
 int main() {
-  array_bit_sort();
+  task_1();
 }

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <utility>
+#include <algorithm>
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <filesystem>
-#include <algorithm>
+#include <utility>
 
 namespace fs = std::filesystem;
 using namespace std::literals;
@@ -29,17 +29,18 @@ struct CityInfo {
 
 class BinaryFile {
  public:
-  explicit BinaryFile(fs::path file_name) : file_name_(std::move(file_name)) {};
-  static bool FileIsOpen(std::fstream &f);
+  BinaryFile() = default;
+  explicit BinaryFile(fs::path file_name) : file_name_(std::move(file_name)){};
+  static bool FileIsOpen(std::fstream& f);
   void ConvertTextToBinary();
   void SaveBinaryToText();
   void PrintAllRecords();
   void AccessRecordByNumber(int record_number);
   void DeleteRecordByKey(int key_value);
-  void CreateCountryCodeTable(const std::string &country_name);
-  void UpdateCityCodeByName(const std::string &city_name, int new_code);
+  void CreateCountryCodeTable(const std::string& country_name);
+  void UpdateCityCodeByName(const std::string& city_name, int new_code);
   fs::path GetName();
 
  private:
-  fs::path file_name_ = fs::path("E:/clion/ciaod/3/3_1.bin");
+  fs::path file_name_ = fs::path("C:/Users/misha/CLionProjects/ciaod/3/3_1.bin");
 };

@@ -5,7 +5,7 @@ int main() {
   std::cout << "Enter the file's name:\n";
   std::string temp;
   std::cin >> temp;
-  fs::path file_path = fs::path("E:/clion/ciaod/2/") / fs::path(temp + ".txt");
+  fs::path file_path = fs::path("C:/Users/misha/CLionProjects/ciaod/2/") / fs::path(temp + ".txt");
 
 //  FunctionsDefault file_reader(file_path);
 //  file_reader.CreateNewFile();
